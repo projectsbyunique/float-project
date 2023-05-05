@@ -1,5 +1,5 @@
 {
-    "name": "float.",
+    "name": "float. - Copy",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -9,7 +9,8 @@
         "arcade-mini-menu": "github:riknoll/arcade-mini-menu#10013ca1dcba54156faf7f4fefff9bc8db24ff26",
         "arcade-story": "github:microsoft/arcade-storytelling#v1.0.3",
         "pxt-lantern": "github:felixtsu/pxt-lantern#v0.2.1",
-        "arcade-text": "github:microsoft/arcade-text#v1.3.0"
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0",
+        "pxt-button-combos": "github:jwunderl/pxt-button-combos#v0.0.24"
     },
     "files": [
         "main.blocks",
@@ -28,7 +29,7 @@
         "branch": "v1.8.29",
         "tag": "v1.8.29",
         "commits": "https://github.com/microsoft/pxt-arcade/commits/d9e3489664e2b8e4c3245a43d28fca1ca5ea001a",
-        "target": "1.12.18",
+        "target": "1.12.30",
         "pxt": "7.4.30",
         "targetId": "arcade"
     },

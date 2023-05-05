@@ -1,52 +1,112 @@
+namespace SpriteKind {
+    export const Drawer = SpriteKind.create()
+}
+function MainMenu () {
+    color.startFade(color.Black, color.originalPalette)
+    timer.background(function () {
+        while (true) {
+            for (let index22 = 0; index22 <= list.length; index22++) {
+                mySprite.setImage(list[index22])
+                pause(25)
+            }
+        }
+    })
+    myMenu = miniMenu.createMenu(
+    miniMenu.createMenuItem("go"),
+    miniMenu.createMenuItem("map"),
+    miniMenu.createMenuItem("again")
+    )
+    myMenu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.Foreground, 11)
+    myMenu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.Foreground, 1)
+    myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Border, miniMenu.createBorderBox(
+    4,
+    0,
+    0,
+    0
+    ))
+    myMenu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.BorderColor, 11)
+    myMenu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.BorderColor, 1)
+    myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Margin, miniMenu.createBorderBox(
+    0,
+    0,
+    0,
+    2
+    ))
+    myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Background, 15)
+    myMenu.setFlag(SpriteFlag.RelativeToCamera, true)
+    myMenu.setPosition(10, 50)
+    timer.background(function () {
+        myMenu.onSelectionChanged(function (selection, selectedIndex) {
+            music.play(music.createSoundEffect(WaveShape.Square, 5000, 5000, 108, 0, 200, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+        })
+    })
+    myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
+        if (selection == "go") {
+            myMenu.close()
+            mySprite.destroy()
+            StartLevel1()
+        }
+    })
+}
+controller.combos.attachCombo("AB", function () {
+    multilights.toggleLighting(false)
+    mySprite2 = sprites.create(assets.image`myImage1`, SpriteKind.Player)
+    mySprite2.setPosition(80, 60)
+    mySprite2.setFlag(SpriteFlag.RelativeToCamera, true)
+    pause_menu = miniMenu.createMenu(
+    miniMenu.createMenuItem("levels"),
+    miniMenu.createMenuItem("exit to main menu"),
+    miniMenu.createMenuItem("back to game")
+    )
+    pause_menu.setFlag(SpriteFlag.RelativeToCamera, true)
+    pause_menu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.Foreground, 11)
+    pause_menu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.Foreground, 1)
+    pause_menu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Border, miniMenu.createBorderBox(
+    4,
+    0,
+    0,
+    0
+    ))
+    pause_menu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.BorderColor, 11)
+    pause_menu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.BorderColor, 1)
+    pause_menu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Margin, miniMenu.createBorderBox(
+    0,
+    0,
+    0,
+    2
+    ))
+    pause_menu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Background, 15)
+    pause_menu.setPosition(10, 50)
+    pause_menu.onSelectionChanged(function (selection, selectedIndex) {
+        music.play(music.createSoundEffect(WaveShape.Square, 5000, 5000, 108, 0, 200, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+    })
+    pause_menu.onButtonPressed(controller.A, function (selection, selectedIndex) {
+        if (selection == "exit to main menu") {
+            pause_menu.close()
+            MainMenu()
+        } else if (selection == "back to game") {
+            pause_menu.close()
+            multilights.toggleLighting(true)
+        }
+    })
+})
 function StartLevel1 () {
+    lvl = 1
     lifes = 3
     light_strength = 30
-    plr = sprites.create(img`
-        . . . . f f f f . . . . 
-        . . f f f f f f f f . . 
-        . f f f f f f f f f f . 
-        f f f f c f f f f f f f 
-        f f f c c c f f f f f f 
-        f f f c c c c f f f f f 
-        f c f c c c c c c f c f 
-        f c c f f c c f f c c f 
-        f f c b b b b b b c f f 
-        . f f b b c c b b f f . 
-        . f f f c c c c f f f . 
-        f c f b b b b b b f c f 
-        c b f b b b b b b f b c 
-        c c f f f f f f f f c c 
-        . . . f f f f f f . . . 
-        . . . f f . . f f . . . 
-        `, SpriteKind.Player)
-    controller.moveSprite(plr)
+    plr = sprites.create(assets.image`plrIdle`, SpriteKind.Player)
+    controller.moveSprite(plr, 50, 50)
     tiles.placeOnTile(plr, tiles.getTileLocation(3, 3))
-    tiles.setCurrentTilemap(tilemap`level`)
+    tiles.setCurrentTilemap(tilemap`level1`)
     scene.centerCameraAt(6 * 16, 5 * 16)
     multilights.toggleLighting(true)
     multilights.addLightSource(plr)
     textSprite = textsprite.create("x" + lifes, 0, 13)
-    textSprite.setIcon(img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c . . . . c c c . . . 
-        . . c d d d c . . c d d d c . . 
-        . c d d d d d c c d d 1 d d c . 
-        c b b d d d d d d d 1 1 1 d d c 
-        c b d b d d d d d d d 1 1 1 d c 
-        c b b b d d d d d d d d d 1 d c 
-        c b b d b d d d d d d d d d d c 
-        c b b b d b d d d d d 1 d d d c 
-        . c b b b d b d d d d d d d c . 
-        . . c b b b d b d d d d d c . . 
-        . . . c b b b d b d b d c . . . 
-        . . . . c b b b d b d c . . . . 
-        . . . . . c b b b b c . . . . . 
-        . . . . . . c b b c . . . . . . 
-        . . . . . . . c c . . . . . . . 
-        `)
+    textSprite.setIcon(assets.image`heartIcon`)
     textSprite.setPosition(15, 6)
     textSprite.setFlag(SpriteFlag.RelativeToCamera, true)
     multilights.bandWidthOf(plr, 30)
+    multilights.addLightSource(textSprite, 25)
     pause(1000)
     music.play(music.createSoundEffect(WaveShape.Sawtooth, 504, 0, 255, 255, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     for (let index = 0; index < 5; index++) {
@@ -54,32 +114,39 @@ function StartLevel1 () {
         multilights.bandWidthOf(plr, light_strength)
         pause(20)
     }
-    timer.background(function () {
-        while (true) {
-            for (let value of tiles.getTilesByType(sprites.swamp.swampTile9)) {
-                pause(30)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile`)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile`)
-                pause(30)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile0`)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile0`)
-                pause(30)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile1`)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`myTile1`)
-                pause(30)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), sprites.swamp.swampTile9)
-                tiles.setTileAt(tiles.getTileLocation(value.column, value.row), sprites.swamp.swampTile9)
-            }
-        }
-    })
 }
+function StartLevel2 () {
+    tiles.setCurrentTilemap(tilemap`level0`)
+    for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
+        drawer_sprite = sprites.create(assets.image`myImage`, SpriteKind.Drawer)
+        tiles.placeOnTile(drawer_sprite, tiles.getTileLocation(value.column, value.row))
+        tiles.setTileAt(tiles.getTileLocation(value.column, value.row), assets.tile`darkGroundCenter`)
+    }
+    tiles.placeOnTile(plr, tiles.getTileLocation(4, 4))
+    scene.cameraFollowSprite(plr)
+}
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.stairSouth, function (sprite, location) {
+    tiles.setTileAt(tiles.getTileLocation(0, location.row), assets.tile`transparency16`)
+    color.startFade(color.originalPalette, color.Black)
+    timer.background(function () {
+        color.startFade(color.Black, color.originalPalette)
+    })
+    StartLevel2()
+})
+let drawer_sprite: Sprite = null
 let textSprite: TextSprite = null
 let plr: Sprite = null
 let light_strength = 0
 let lifes = 0
+let lvl = 0
+let pause_menu: miniMenu.MenuSprite = null
+let mySprite2: Sprite = null
+let myMenu: miniMenu.MenuSprite = null
+let mySprite: Sprite = null
+let list: Image[] = []
 color.startFade(color.Black, color.originalPalette)
 tiles.setCurrentTilemap(tilemap`level3`)
-let list = [
+list = [
 img`
     dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9dbd9ddd9d9d9ddd9d919d9dfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -8621,7 +8688,7 @@ img`
     fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffccccccfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `
 ]
-let mySprite = sprites.create(img`
+mySprite = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -8641,8 +8708,8 @@ let mySprite = sprites.create(img`
     `, SpriteKind.Player)
 mySprite.setPosition(8, 8)
 mySprite.setFlag(SpriteFlag.RelativeToCamera, true)
-for (let index = 0; index <= list.length; index++) {
-    mySprite.setImage(list[index])
+for (let index2 = 0; index2 <= list.length; index2++) {
+    mySprite.setImage(list[index2])
     pause(50)
 }
 list = [
@@ -13527,43 +13594,10 @@ img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc11111bfffd111cfffffffffffffffffcb11111111111111cffffc111111bfffffffffffffffffffffffffffffffff
     `
 ]
-color.startFade(color.Black, color.originalPalette)
-timer.background(function () {
-    while (true) {
-        for (let index2 = 0; index2 <= list.length; index2++) {
-            mySprite.setImage(list[index2])
-            pause(25)
-        }
-    }
+MainMenu()
+forever(function () {
+    music.play(music.melodyPlayable(music.thump), music.PlaybackMode.UntilDone)
 })
-let myMenu = miniMenu.createMenu(
-miniMenu.createMenuItem("go"),
-miniMenu.createMenuItem("map"),
-miniMenu.createMenuItem("again")
-)
-myMenu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.Foreground, 11)
-myMenu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.Foreground, 1)
-myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Border, miniMenu.createBorderBox(
-4,
-0,
-0,
-0
-))
-myMenu.setStyleProperty(miniMenu.StyleKind.Default, miniMenu.StyleProperty.BorderColor, 11)
-myMenu.setStyleProperty(miniMenu.StyleKind.Selected, miniMenu.StyleProperty.BorderColor, 1)
-myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Margin, miniMenu.createBorderBox(
-0,
-0,
-0,
-2
-))
-myMenu.setStyleProperty(miniMenu.StyleKind.DefaultAndSelected, miniMenu.StyleProperty.Background, 15)
-myMenu.setFlag(SpriteFlag.RelativeToCamera, true)
-myMenu.setPosition(10, 50)
-myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
-    if (selection == "go") {
-        myMenu.close()
-        mySprite.destroy()
-        StartLevel1()
-    }
+forever(function () {
+	
 })
